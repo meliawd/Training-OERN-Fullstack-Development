@@ -2,11 +2,13 @@ const express = require("express");
 const contactController = require("../controllers/contactController");
 const contactValidator = require("../middleware/contactValidator");
 const upload = require("../middleware/uploadMiddleware");
+const { body } = require("express-validator");
 
 const router = express.Router();
 
 router.get("/test", contactController.index);
 router.get("/", contactController.getAll);
+router.get("/:id", contactController.getById);
 router.post(
   "/",
   upload.single("image"),
@@ -36,5 +38,13 @@ router.post("/upload", upload.single("image"), (req, res) => {
     });
   }
 });
+router.put(
+  "/:id",
+  upload.single("image"),
+  body("name").isLength({ min: 3 }).withMessage("nama minimal 3 karakter"),
+  body("email").isEmail().withMessage("email tidak valid"),
+  body("phone").isMobilePhone("id-ID").withMessage("nomor telepon tidak valid"),
+  contactController.update
+);
 
 module.exports = router;

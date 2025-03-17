@@ -1,6 +1,8 @@
 const db = require("../database/models");
 const { validationResult } = require("express-validator");
 const fs = require("fs");
+const { get } = require("http");
+const { where } = require("sequelize");
 
 module.exports = {
   index: (req, res) => {
@@ -15,6 +17,16 @@ module.exports = {
       status: "Success",
       data: contacts,
     });
+  },
+
+  async getById(req, res) {
+    const id = req.params.id;
+    const contact = await db.Contact.findOne({ where: { id: id } });
+    if (contact) {
+      return res.status(200).json({ status: "Success", data: contact });
+    } else {
+      return res.status(404).json({ message: "contact not found" });
+    }
   },
 
   async store(req, res) {
@@ -58,6 +70,54 @@ module.exports = {
       return res.status(200).json({ status: "data berhasil dihapus" });
     } else {
       return res.status(400).json({ status: "data tidak ditemukan" });
+    }
+  },
+
+  async update(req, res) {
+    const errors = validationResult(req);
+    const id = req.params.id;
+    const { name, email, phone } = req.body;
+
+    // jika ada error validation from express-validator
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        status: "Error",
+        errors: errors.array(),
+      });
+    } else {
+      // ambil by id
+      const contact = await db.Contact.findOne({
+        where: { id: id },
+      });
+
+      // jika data tidak ditemukan
+      if (!contact) {
+        return res.status(404).json({
+          status: "Error",
+          message: "Data not found",
+        });
+      }
+
+      // jika ada image dari form
+      if (req.file) {
+        if (contact.image !== null) {
+          const filepath = `./public/images/${contact.image}`;
+          fs.unlinkSync(filepath);
+        }
+        var image = req.file.filename;
+      } else {
+        var image = contact.image;
+      }
+
+      contact.name = name;
+      contact.email = email;
+      contact.phone = phone;
+      contact.image = image;
+      await contact.save();
+
+      return res.status(200).json({
+        status: "data berhasil diupdate",
+      });
     }
   },
 };
