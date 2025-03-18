@@ -11,6 +11,9 @@ require("dotenv").config();
 
 const port = process.env.PORT || 3000; // Port default 3000
 
+// untuk mengakses file statis
+app.use(express.static("public"));
+
 // Middleware untuk menampilkan log request
 app.use(morgan("dev"));
 
@@ -19,7 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(compression());
 app.use(cors());
-app.use(helmet());
+// app.use(helmet());
 
 // routes
 const basicRoute = require("./routes/basicRoute");
