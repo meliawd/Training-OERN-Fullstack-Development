@@ -5,6 +5,8 @@ import Home from "../pages/Home";
 import Blog from "../pages/Blog";
 import Teams from "../pages/Teams";
 import Services from "../pages/Services";
+import Create from "../components/crud/Create";
+import Edit from "../components/crud/Edit";
 
 function App() {
   return (
@@ -15,6 +17,9 @@ function App() {
         <Route path="/blogs" element={<Blog />} />
         <Route path="/teams" element={<Teams />} />
         <Route path="/services" element={<Services />} />
+        {/* CRUD Routes */}
+        <Route path="/create" element={<Create />} />
+        <Route path="/edit/:id" element={<Edit />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

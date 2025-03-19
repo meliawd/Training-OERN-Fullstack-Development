@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 // import Hooks from "./dasar/Hooks.jsx";
 import Map from "./dasar/Map.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
+// import "bulma/css/bulma.min.css";
 import App from "./routes/App.jsx";
 import { BrowserRouter } from "react-router-dom";
 

@@ -43,6 +43,10 @@ module.exports = {
 
     // jika ada error
     if (!errors.isEmpty()) {
+      if (req.file) {
+        const filepath = `./public/images/${req.file.filename}`;
+        fs.unlinkSync(filepath);
+      }
       return res.status(422).json({ status: "Error", errors: errors.array() });
     } else {
       const contact = await db.Contact.create({
@@ -80,6 +84,10 @@ module.exports = {
 
     // jika ada error validation from express-validator
     if (!errors.isEmpty()) {
+      if (req.file) {
+        const filepath = `./public/images/${req.file.filename}`;
+        fs.unlinkSync(filepath);
+      }
       return res.status(422).json({
         status: "Error",
         errors: errors.array(),
